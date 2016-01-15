@@ -21,16 +21,18 @@ def filter_to_kw(filename, beg, end, id):
     writer = csv.DictWriter(fout, fieldnames=fieldnames)
     writer.writeheader()
     count = 0
+    process_line_count = 0
     with open(filename) as fin:
         reader = csv.DictReader(fin)
         for line in reader:
+            count += 1
             if count < beg:
                 continue
             if count >= end:
                 break
-            count += 1
-            if count % 500 == 0:
-                logging.info('process:%d:%d' % (id, count))
+            process_line_count += 1
+            if process_line_count % 500 == 0:
+                logging.info('process:%d:%lf%%' % (id, 1.0 * process_line_count / (end - beg) * 100))
             new_comment = ''
             opinion = dish_extractor.extract(line['content'])
             envir_service = envir_service_extractor.extract(line['content'])
@@ -47,7 +49,7 @@ def filter_to_kw(filename, beg, end, id):
 
 def main():
     filename = '../../paper/data/dianping/comment.mongo'
-    thread_nums = 10
+    thread_nums = 20
     lc = line_count(filename)
     print lc
     seg_info = [1]
