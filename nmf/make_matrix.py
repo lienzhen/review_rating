@@ -50,6 +50,34 @@ def load_score_matrix(filename):
             count += 1
     return _matrix, total / count
 
+def load_user_item_score(filename):
+    # format
+    # user_id, item_id, score
+    #_matrix = defaultdict(lambda: defaultdict(lambda: 0.0))
+    user_score = {}
+    item_score = {}
+    total = 0.0
+    count = 0
+    with open(filename) as fin:
+        for line in fin:
+            user_id, item_id, star = line.strip().split()
+            star = float(star)
+            if user_id not in user_score:
+                user_score[user_id] = {}
+                user_score[user_id]['score'] = 0.0
+                user_score[user_id]['count'] = 0
+            if item_id not in item_score:
+                item_score[item_id] = {}
+                item_score[item_id]['score'] = 0.0
+                item_score[item_id]['count'] = 0
+            user_score[user_id]['score'] += star
+            user_score[user_id]['count'] += 1
+            item_score[item_id]['score'] += star
+            item_score[item_id]['count'] += 1
+            total += star
+            count += 1
+    return user_score, item_score, 1.0 * total / count
+
 def main():
     fout = file('user_star_res', 'w')
     dataset = 'user_star.txt'
