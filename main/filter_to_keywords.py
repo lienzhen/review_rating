@@ -19,7 +19,7 @@ def filter_to_kw(filename, beg, end, id):
     envir_service_extractor = EnvirServExtractor()
     # has finish
     if os.path.exists('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg):
-        print 'process %d finish' % id
+        print 'Exist. process %d finish' % id
         return
 
     fout = file('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg, 'w')
