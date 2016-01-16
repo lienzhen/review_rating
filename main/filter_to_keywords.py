@@ -18,7 +18,9 @@ def filter_to_kw(filename, beg, end, id):
     dish_extractor = DishOpinionExtractor()
     envir_service_extractor = EnvirServExtractor()
     # has finish
-    if os.path.exists('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg): return
+    if os.path.exists('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg):
+        print 'process %d finish' % id
+        return
 
     fout = file('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg, 'w')
     fieldnames = ['_id', 'content', 'shop_id', 'user_id', 'star']
@@ -50,10 +52,11 @@ def filter_to_kw(filename, beg, end, id):
                     row[key] = line[key]
             row['content'] = new_comment if new_comment.strip() != '' else line['content']
             writer.writerow(row)
+    print 'process %d finish' % id
 
 def main():
     filename = '../../paper/data/dianping/comment.mongo'
-    thread_nums = 20
+    thread_nums = 10
     lc = line_count(filename)
     print lc
     seg_info = [1]
