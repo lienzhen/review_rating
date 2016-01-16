@@ -11,8 +11,8 @@ print=" -print 1 "
 iter=" -iter   200 "
 k=" -k 50 "
 numTrain=" -numTrain 1 "
-inPre="./train/"
-outPre="./out/"
+inPre="../../paper/data/dianping/mf/train/"
+outPre="../../paper/data/dianping/mf/out/"
 
 runPart() {
     local newArr
@@ -21,7 +21,7 @@ runPart() {
     for dataName in ${newArr[@]}
     do
         trainFileName=$inPre$dataName
-        printfilename=$outPre$dataName".log"
+        printfilename=$dataName".log"
 
         nohup python mf.py -dataName ${dataName} -train ${trainFileName} -outPre ${outPre} ${speed} ${regU} ${regI} ${regB} ${regK} ${numTrain} ${iter} ${k} > $printfilename &
 
@@ -30,6 +30,6 @@ runPart() {
 
 }
 
-dataNameList1=(user_star.txt)
+dataNameList1=(comment.mongo.train)
 
 runPart ${dataNameList1[@]} &
