@@ -4,6 +4,7 @@ import csv
 from extract_comment_opinion import DishOpinionExtractor
 from extract_enviro_service_comment import EnvirServExtractor
 from multiprocessing import Process
+import os.path
 
 def line_count(filename):
     count = 0
@@ -16,6 +17,9 @@ def filter_to_kw(filename, beg, end, id):
     logging.info('info:%s,%s,%s-%s' % (id, filename, beg, end))
     dish_extractor = DishOpinionExtractor()
     envir_service_extractor = EnvirServExtractor()
+    # has finish
+    if os.path.exists('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg): return
+
     fout = file('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg, 'w')
     fieldnames = ['_id', 'content', 'shop_id', 'user_id', 'star']
     writer = csv.DictWriter(fout, fieldnames=fieldnames)
