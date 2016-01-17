@@ -15,14 +15,15 @@ def line_count(filename):
 
 def filter_to_kw(filename, beg, end, id):
     logging.info('info:%s,%s,%s-%s' % (id, filename, beg, end))
+    if id != 9: return
     dish_extractor = DishOpinionExtractor()
     envir_service_extractor = EnvirServExtractor()
     # has finish
-    if os.path.exists('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg):
-        print 'Exist. process %d finish' % id
-        return
+    #if os.path.exists('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg):
+        #print 'Exist. process %d finish' % id
+        #return
 
-    fout = file('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg, 'w')
+    fout = file('../../paper/data/dianping/comment.kw/comment.keyword.%s' % beg, 'a')
     fieldnames = ['_id', 'content', 'shop_id', 'user_id', 'star']
     writer = csv.DictWriter(fout, fieldnames=fieldnames)
     writer.writeheader()
@@ -39,6 +40,7 @@ def filter_to_kw(filename, beg, end, id):
             process_line_count += 1
             if process_line_count % 500 == 0:
                 logging.info('process:%d:%lf%%' % (id, 1.0 * process_line_count / (end - beg) * 100))
+            if process_line_count < 160652: continue
             new_comment = ''
             opinion = dish_extractor.extract(line['content'])
             envir_service = envir_service_extractor.extract(line['content'])
