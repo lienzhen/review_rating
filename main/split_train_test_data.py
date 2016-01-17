@@ -33,9 +33,9 @@ def sample_all(filename):
         count += 1
         num = random.randint(1, 100)
         if num <= test_percentage:
-            fout_test.write('%s\t%s\t%s\n' % (row['user_id'], row['shop_id'], row['star']))
+            fout_test.write('%s\t%s\t%s\n' % (row['user_id'], row['shop_id'], row['star'], row['content']))
         else:
-            fout_train.write('%s\t%s\t%s\n' % (row['user_id'], row['shop_id'], row['star']))
+            fout_train.write('%s\t%s\t%s\n' % (row['user_id'], row['shop_id'], row['star'], row['content']))
     fout_test.close()
     fout_train.close()
     fin.close()
