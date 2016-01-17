@@ -125,5 +125,5 @@ def main():
 
 if __name__ == '__main__':
     #sample_by_user('../../paper/data/dianping/comment.mongo')
-    #sample_all('../../paper/data/dianping/comment.mongo')
-    main()
+    sample_all('../../paper/data/dianping/comment.keyword')
+    #main()
