@@ -7,7 +7,7 @@ def log(logstr, writer = sys.stdout, inline = False):
     writer.flush()
 
 def generate_user_star(filename):
-    fout = file('user_star.txt', 'w')
+    fout = file('../../paper/data/dianping/mf/user_item_star.txt', 'w')
     count = 0
     with open(filename) as fin:
         reader = csv.DictReader(fin)
@@ -20,7 +20,7 @@ def generate_user_star(filename):
     log('Finish')
 
 def main():
-    generate_user_star('../../paper/data/comment.mongo')
+    generate_user_star('../../paper/data/dianping/comment.mongo')
 
 if __name__ == '__main__':
     main()

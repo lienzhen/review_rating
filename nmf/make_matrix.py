@@ -1,16 +1,22 @@
 from collections import defaultdict
 import sys
 from datetime import datetime
+import logging
+logging.basicConfig(format='%(asctime)s\t%(message)s', level=logging.INFO)
 
 def log(logstr, writer = sys.stdout, inline = False):
     writer.write("%s\t%s%s" % (str(datetime.now()), logstr, '\r' if inline else '\n'))
     writer.flush()
 
-def load_nmf_matrix(filename):
+def load_nmf_matrix(filename, print_log = False):
+    count = 0
     _matrix = {}
     _bias = defaultdict(float)
     with open(filename) as fin:
         for line in fin:
+            if count % 10000 == 0 and print_log:
+                logging.info(count)
+            count += 1
             arr = line.split('\t')
             nums = arr[1].split(' ')
             _matrix[arr[0]] = [float(x) for x in nums[:-1]]
@@ -50,16 +56,20 @@ def load_score_matrix(filename):
             count += 1
     return _matrix, total / count
 
-def load_user_item_score(filename):
+def load_user_item_score(filename, print_log = False):
     # format
     # user_id, item_id, score
     #_matrix = defaultdict(lambda: defaultdict(lambda: 0.0))
+    line_count = 0
     user_score = {}
     item_score = {}
     total = 0.0
     count = 0
     with open(filename) as fin:
         for line in fin:
+            if line_count % 10000 == 0 and print_log:
+                logging.info(line_count)
+            line_count += 1
             user_id, item_id, star = line.strip().split()
             star = float(star)
             if user_id not in user_score:
