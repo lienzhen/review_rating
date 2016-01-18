@@ -3,6 +3,9 @@ import csv
 from collections import defaultdict
 import sys
 from datetime import datetime
+import logging
+logging.basicConfig(format='%(asctime)s\t%(message)s', level=logging.INFO)
+import os
 
 def log(logstr, writer = sys.stdout):
     writer.write("%s\t%s\n" % (str(datetime.now()), logstr))
@@ -63,15 +66,18 @@ def main_csv():
     print ''
     log("finish")
 
-def main(filename):
+def main(input_path, output_path, filename):
+    logging.info('generate_user_item_comment input_path:%s' % input_path)
+    logging.info('generate_user_item_comment output_path:%s' % output_path)
+    logging.info('generate_user_item_comment filename:%s' % filename)
     user_comment = defaultdict(list)
     shop_comment = defaultdict(list)
     count = 1
-    log("loading comment...")
-    with open('../../paper/data/dianping/%s' % filename) as fin:
+    logging.info("loading comment...")
+    with open(os.path.join(input_path, filename)) as fin:
         for line in fin:
             if count % 10000 == 0:
-                log(count)
+                logging.info(count)
             count += 1
             arr = line.strip().split('\t')
             if len(arr) < 4:
@@ -80,26 +86,32 @@ def main(filename):
             content = ' '.join(arr[3:])
             user_comment[user_id].append(content)
             shop_comment[shop_id].append(content)
-    print ''
-    log("saving shop_comment...")
+    logging.info("saving shop_comment...")
     count = 1
-    with open('../../paper/data/dianping/corpus/%s.shop' % filename , 'w') as fout:
+    with open(os.path.join(output_path, '%s.item' % filename), 'w') as fout:
         for shop_id, comment in shop_comment.iteritems():
-            log(count)
+            if count % 10000 == 0:
+                logging.info(count)
             count += 1
             if len(comment) == 0: continue
             fout.write('%s\t%s\n' % (shop_id, '。'.join(comment)))
-    print ''
-    log("saving user_comment...")
+    logging.info("saving user_comment...")
     count = 1
-    with open('../../paper/data/dianping/corpus/%s.user' % filename , 'w') as fout:
+    with open(os.path.join(output_path, '%s.user' % filename), 'w') as fout:
         for user_id, comment in user_comment.iteritems():
-            log(count)
+            if count % 10000 == 0:
+                logging.info(count)
             count += 1
             if len(comment) == 0: continue
             fout.write('%s\t%s\n' % (user_id, '。'.join(comment)))
-    print ''
-    log("finish")
+    logging.info("finish")
 
 if __name__ == '__main__':
-    main('comment.keyword.train')
+    #main('comment.keyword.train')
+    #argv format
+    #input_path, output_path, filename
+    #corpus path
+    if len(sys.argv) != 4:
+        logging.info('generate_user_item_comment.py argv error')
+        exit(1)
+    main(sys.argv[1], sys.argv[2], sys.argv[3])
