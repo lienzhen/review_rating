@@ -1,3 +1,4 @@
+#coding=utf-8
 import csv
 from collections import defaultdict
 import sys
@@ -26,7 +27,7 @@ def get_dict_word(content, word_dict):
             res.append(each)
     return res
 
-def main():
+def main_csv():
     word_dict = load_set('../ner/dish.txt')
     user_comment = defaultdict(list)
     shop_comment = defaultdict(list)
@@ -62,5 +63,43 @@ def main():
     print ''
     log("finish")
 
+def main(filename):
+    user_comment = defaultdict(list)
+    shop_comment = defaultdict(list)
+    count = 1
+    log("loading comment...")
+    with open('../../paper/data/dianping/%s' % filename) as fin:
+        for line in fin:
+            if count % 10000 == 0:
+                log(count)
+            count += 1
+            arr = line.strip().split('\t')
+            if len(arr) < 4:
+                continue
+            user_id, shop_id, star = arr[:3]
+            content = ' '.join(arr[3:])
+            user_comment[user_id].append(content)
+            shop_comment[shop_id].append(content)
+    print ''
+    log("saving shop_comment...")
+    count = 1
+    with open('../../paper/data/dianping/corpus/%s.shop' % filename , 'w') as fout:
+        for shop_id, comment in shop_comment.iteritems():
+            log(count)
+            count += 1
+            if len(comment) == 0: continue
+            fout.write('%s\t%s\n' % (shop_id, '。'.join(comment)))
+    print ''
+    log("saving user_comment...")
+    count = 1
+    with open('../../paper/data/dianping/corpus/%s.user' % filename , 'w') as fout:
+        for user_id, comment in user_comment.iteritems():
+            log(count)
+            count += 1
+            if len(comment) == 0: continue
+            fout.write('%s\t%s\n' % (user_id, '。'.join(comment)))
+    print ''
+    log("finish")
+
 if __name__ == '__main__':
-    main()
+    main('comment.keyword.train')

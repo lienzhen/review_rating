@@ -3,6 +3,7 @@ import sys
 from datetime import datetime
 import logging
 logging.basicConfig(format='%(asctime)s\t%(message)s', level=logging.INFO)
+import os
 
 def log(logstr, writer = sys.stdout, inline = False):
     writer.write("%s\t%s%s" % (str(datetime.now()), logstr, '\r' if inline else '\n'))
@@ -108,6 +109,26 @@ def main():
             fout.write('%s:%s\t%f\t%f\t%f\n' % (user_id, item_id, score, _matrix[user_id][item_id], score - _matrix[user_id][item_id]))
     fout.close()
 
+def cal_residual(filename):
+    # comment.keyword.train
+    base_dir = '../../paper/data/dianping/mf/'
+    fout = file(os.path.join(base_dir, '../corpus/%s.residual' % filename), 'w')
+    log('loading user matrix...')
+    user_matrix, user_bias = load_nmf_matrix(os.path.join(base_dir, 'out/%s.user_item_star.user' % filename))
+    log('loading item matrix...')
+    item_matrix, item_bias = load_nmf_matrix(os.path.join(base_dir, 'out/%s.user_item_star.item' % filename))
+    log('loading score matrix...')
+    _matrix, global_bias = load_score_matrix(os.path.join(base_dir, 'train/%s.user_item_star' % filename))
+    print 'global_bias:%s' % global_bias
+    count = 0
+    with open(os.path.join(base_dir, 'train/%s.user_item_star' % filename)) as fin:
+        for line in fin:
+            user_id, item_id, star = line.strip().split('\t')
+            star = float(star)
+            score = cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias)
+            fout.write('%s\t%s\t%lf\n' % (user_id, item_id, star - score))
+    fout.close()
+
 def memory_main():
     fout = file('user_star_res', 'w')
     dataset = 'user_star.txt'
@@ -128,5 +149,6 @@ def memory_main():
             fout.write('%s:%s\t%f\t%f\t%f\n' % (user_id, item_id, score, _matrix[user_id][item_id], score - _matrix[user_id][item_id]))
     fout.close()
 if __name__ == '__main__':
-    main()
+    #main()
+    cal_residual('comment.keyword.train')
 

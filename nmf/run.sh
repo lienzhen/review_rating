@@ -8,7 +8,7 @@ regU=" -regU   0.001 "
 regI=" -regI   0.001 "
 regB=" -regB   0.001 "
 print=" -print 1 "
-iter=" -iter   200 "
+iter=" -iter   100 "
 k=" -k 50 "
 numTrain=" -numTrain 1 "
 inPre="../../paper/data/dianping/mf/train/"
@@ -30,6 +30,6 @@ runPart() {
 
 }
 
-dataNameList1=(comment.mongo.train)
+dataNameList1=(comment.keyword.train.user_item_star)
 
 runPart ${dataNameList1[@]} &

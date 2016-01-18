@@ -85,7 +85,7 @@ def cal_rmse(test_file, score_function):
         # format
         # user_id, item_id, star
         for line in fin:
-            user_id, shop_id, star = line.strip().split()
+            user_id, shop_id, star = line.strip().split()[:3]
             star = float(star)
             score = score_function(user_id, shop_id)
             count += 1
@@ -106,10 +106,10 @@ all_miss = 0
 def main():
     global user_matrix, user_bias, item_matrix, item_bias, user_score, item_score, global_bias
     base_dir = '../../paper/data/dianping/mf/'
-    user_item_score_file = os.path.join(base_dir, 'train/comment.mongo.train')
-    user_matrix_file = os.path.join(base_dir, 'out/comment.mongo.train.user')
-    item_matrix_file = os.path.join(base_dir, 'out/comment.mongo.train.item')
-    test_file = os.path.join(base_dir, 'test/comment.mongo.test')
+    user_item_score_file = os.path.join(base_dir, 'train/comment.keyword.train.user_item_star')
+    user_matrix_file = os.path.join(base_dir, 'out/comment.keyword.train.user_item_star.user')
+    item_matrix_file = os.path.join(base_dir, 'out/comment.keyword.train.user_item_star.item')
+    test_file = os.path.join(base_dir, '../comment.keyword.test')
     #test_file = os.path.join(base_dir, 'train/comment.mongo.train')
     logging.info('loading user matrix...')
     user_matrix, user_bias = load_nmf_matrix(user_matrix_file, print_log=True)
@@ -125,5 +125,5 @@ def main():
 
 if __name__ == '__main__':
     #sample_by_user('../../paper/data/dianping/comment.mongo')
-    sample_all('../../paper/data/dianping/comment.keyword')
-    #main()
+    #sample_all('../../paper/data/dianping/comment.keyword')
+    main()
