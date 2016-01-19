@@ -29,7 +29,7 @@ def main():
     user_vec = load_vec(user_vector)
     shop_vec = load_vec(shop_vector)
 
-    fout = os.path.join(vector_directory,"comment.keyword.train.vector.joint.1000")
+    fout = os.path.join(vector_directory,"comment.keyword.train.joint.vector.1000")
     fw = open(fout, "w")
     logging("jointing vector")
     index = 0
@@ -44,7 +44,7 @@ def main():
             line_wc = arr[0] + "\t" + arr[1]
             u_vec = user_vec[arr[0]]
             s_vec = shop_vec[arr[1]]
-            line_wc = line_wc +"\t" + "\t".join([str(x) for x in u_vec]) + "\t".join([str(x) for x in s_vec]) + "\n"
+            line_wc = line_wc +"\t" + "\t".join([str(x) for x in u_vec]) + "\t" + "\t".join([str(x) for x in s_vec]) + "\n"
             fw.write(line_wc)
     fw.close()
 
