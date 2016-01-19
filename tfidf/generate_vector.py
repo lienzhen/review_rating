@@ -1,10 +1,17 @@
 #coding = utf-8
+import sys
+sys.path.append("../langconv/")
+from langconv import *
 from datetime import datetime
 from gensim import corpora, models
+import os
+import jieba
 
-tfidf_loadDic = "tfidf.dic"
-tfidf_loadModel = "tfidf.model"
-stop_words = [word.strip() for word in open("../../paper/date/dianping/mark").readlines()]
+model_directory = "../../paper/data/dianping/tfidf/model"
+tfidf_loadDic = os.path.join(model_directory, "tfidf.dic")
+tfidf_loadModel = os.path.join(model_directory, "tfidf.model")
+stop_words = [word.strip() for word in open("../../paper/data/dianping/stopwords.txt").readlines()]
+
 def logging(logstr):
     print "%s\t%s" % (datetime.now(), logstr)
 
@@ -19,6 +26,7 @@ def load_model():
 dictionary, tfidf_model = load_model()
 
 def tfidf_vector(sentence):
+    sentence = Converter('zh-hans').convert(sentence.decode("utf-8")).encode("utf-8")
     text = [word.lower() for word in jieba.cut(sentence) if word.encode("utf-8") not in stop_words]
     text_bow = dictionary.doc2bow(text)
     text_tfidf = tfidf_model[text_bow]
@@ -29,22 +37,35 @@ def tfidf_vector(sentence):
         vec_tfidf[index] = item[1]
     return vec_tfidf
 
-def main():
-    fw = open(, 'w')
-    logging("traning data")
+def get_vec(file_data, file_write):
+    fw = open(file_write, 'w')
+    logging("traning %s data" % file_data)
     starttime = datetime.now()
     index = 0
-    with open() as f:
+    with open(file_data) as f:
         index += 1
         if index % 500 ==0:
             logging("%d cases" % index)
         for line in f:
             arr = line.strip().split("\t")
-            vec_tfidf = tfidf_vector(arr[1])
-            line_w = arr[0] + '\t' + '\t'.join([str(x)]) + "\n"
+            if len(arr) < 2:continue
+            vec_tfidf = tfidf_vector(" ".join(arr[1:]))
+            line_w = arr[0] + '\t' + '\t'.join([str(x) for x in vec_tfidf]) + "\n"
             fw.write(line_w)
     fw.close()
-    logging("training data, eplased time:%s" % str(datetime.now() - starttime))
+    logging("training %s data, eplased time:%s" % (file_data, str(datetime.now() - starttime)))
+
+def main():
+    data_directory = "../../paper/data/dianping/corpus/"
+    vector_directory = "../../paper/data/dianping/tfidf/vector"
+    user_data = os.path.join(data_directory, "comment.keyword.train.user.1000")
+    user_vector = os.path.join(vector_directory, "comment.keyword.train.user.vector.1000")
+    shop_data = os.path.join(data_directory, "comment.keyword.train.shop.1000")
+    shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector.1000")
+    logging("generating users'vector")
+    get_vec(user_data, user_vector)
+    logging("generating shops'vector")
+    get_vec(shop_data, shop_vector)
 
 if __name__ == "__main__":
     main()
