@@ -38,12 +38,12 @@ def main():
     #user_data = os.path.join(data_directory, "user2")
     #shop_data = os.path.join(data_directory, "shop2")
     shop_data = os.path.join(data_directory, "comment.keyword.train.shop.1000")
+
     logging("loading user's data")
     user_set = load_corpus(user_data)
     logging("loading shop's data")
     shop_set = load_corpus(shop_data)
     train_set = user_set + shop_set
-    print len(train_set)
 
     model_directory = "../../paper/data/dianping/tfidf/model"
     logging("generating dictionary")
