@@ -30,32 +30,35 @@ def tfidf_vector(sentence):
     text = [word.lower() for word in jieba.cut(sentence) if word.encode("utf-8") not in stop_words]
     text_bow = dictionary.doc2bow(text)
     text_tfidf = tfidf_model[text_bow]
-    len_vector = len(dictionary)
-    vec_tfidf = [0.0] * len_vector
-    for item in text_tfidf:
-        index = int(item[0])
-        vec_tfidf[index] = item[1]
-    return vec_tfidf
+    return text_tfidf
 
 def get_vec(file_data, file_write):
     fw = open(file_write, 'w')
     logging("traning %s data" % file_data)
     starttime = datetime.now()
     index = 0
+    dic_len = len(dictionary)
     with open(file_data) as f:
-        index += 1
-        if index % 500 ==0:
-            logging("%d cases" % index)
         for line in f:
+            index += 1
+            if index % 200 ==0:
+                logging("%d cases" % index)
             arr = line.strip().split("\t")
             if len(arr) < 2:continue
             vec_tfidf = tfidf_vector(" ".join(arr[1:]))
-            line_w = arr[0] + '\t' + '\t'.join([str(x) for x in vec_tfidf]) + "\n"
+            if "shop" in file_data:
+                for i in range(len(vec_tfidf)):
+                    vec_tfidf[i] = list(vec_tfidf[i])
+                    vec_tfidf[i][0] += dic_len - 1
+            for i in range(len(vec_tfidf)):
+                vec_tfidf[i] = ",".join([str(x) for x in vec_tfidf[i]])
+            line_w = arr[0] + '\t' + '\t'.join(vec_tfidf) + "\n"
             fw.write(line_w)
     fw.close()
     logging("training %s data, eplased time:%s" % (file_data, str(datetime.now() - starttime)))
 
 def main():
+#    print len(dictionary)
     data_directory = "../../paper/data/dianping/corpus/"
     vector_directory = "../../paper/data/dianping/tfidf/vector"
     user_data = os.path.join(data_directory, "comment.keyword.train.user.1000")
