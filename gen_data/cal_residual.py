@@ -129,20 +129,44 @@ def memory_main():
             fout.write('%s:%s\t%f\t%f\t%f\n' % (user_id, item_id, score, _matrix[user_id][item_id], score - _matrix[user_id][item_id]))
     fout.close()
 
+def cal_residual_test(train_file_path, user_item_path, output_path, filename):
+    logging.info('calculating residual...')
+    # comment.keyword.train
+    fout = file(os.path.join(output_path, '%s.residual' % filename), 'w')
+    logging.info('loading user matrix...')
+    user_matrix, user_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.user' % filename.replace('.test', '.train.user_item_star')))
+    logging.info('loading item matrix...')
+    item_matrix, item_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.item' % filename.replace('.test', '.train.user_item_star')))
+    logging.info('loading score matrix...')
+    _matrix, global_bias = load_score_matrix(os.path.join(train_file_path, '%s' % filename))
+    logging.info('global_bias:%s' % global_bias)
+    with open(os.path.join(train_file_path, '%s' % filename)) as fin:
+        for line in fin:
+            arr = line.strip().split('\t')
+            user_id, item_id, star = arr[:3]
+            if user_id not in user_matrix or item_id not in item_matrix: continue
+            star = float(star)
+            score = cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias)
+            fout.write('%s\t%s\t%lf\n' % (user_id, item_id, star - score))
+    fout.close()
+    logging.info('residual finish')
+
+
 def cal_residual(train_file_path, user_item_path, output_path, filename):
     logging.info('calculating residual...')
     # comment.keyword.train
     fout = file(os.path.join(output_path, '%s.residual' % filename), 'w')
     logging.info('loading user matrix...')
-    user_matrix, user_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.user' % filename))
+    user_matrix, user_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.user_item_star.user' % filename))
     logging.info('loading item matrix...')
-    item_matrix, item_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.item' % filename))
+    item_matrix, item_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.user_item_star.item' % filename))
     logging.info('loading score matrix...')
     _matrix, global_bias = load_score_matrix(os.path.join(train_file_path, '%s.user_item_star' % filename))
     logging.info('global_bias:%s' % global_bias)
     with open(os.path.join(train_file_path, '%s.user_item_star' % filename)) as fin:
         for line in fin:
-            user_id, item_id, star = line.strip().split('\t')
+            arr = line.strip().split('\t')
+            user_id, item_id, star = arr[:3]
             star = float(star)
             score = cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias)
             fout.write('%s\t%s\t%lf\n' % (user_id, item_id, star - score))
@@ -152,12 +176,15 @@ def cal_residual(train_file_path, user_item_path, output_path, filename):
 if __name__ == '__main__':
     #main()
     #argv format
-    #train_file_path, user_item_path, output_path, filename
+    #train_file_path, user_item_path, output_path, filename [test (for test file to cal residual)]
     #nmf/train
     #nmf/out/*.user or .item
     #corpus path
-    if len(sys.argv) != 5:
+    if len(sys.argv) == 5:
+        cal_residual(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    elif len(sys.argv) == 6:
+        cal_residual_test(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    else:
         logging.info('cal_residual.py argv error')
         exit(1)
-    cal_residual(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 

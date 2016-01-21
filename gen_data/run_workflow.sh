@@ -1,4 +1,4 @@
-filename='comment.keyword.sample'
+filename='comment.keyword'
 basedir='../../paper/data/dianping/'
 mf_train_path=$basedir'mf/train/'
 mf_out_path=$basedir'mf/out/'
@@ -11,6 +11,7 @@ regU=" -regU   0.001 "
 regI=" -regI   0.001 "
 regB=" -regB   0.001 "
 print=" -print 1 "
+# !!!iteration!!!
 iter=" -iter   10 "
 k=" -k 50 "
 numTrain=" -numTrain 1 "
@@ -49,5 +50,5 @@ fi
 
 #cal residual
 echo 'STEP 5'
-python cal_residual.py ${mf_train_path} ${mf_out_path} ${corpus_path} ${filename}
+python cal_residual.py ${mf_train_path} ${mf_out_path} ${corpus_path} ${filename}.train
 
