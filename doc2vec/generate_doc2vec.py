@@ -24,10 +24,11 @@ def log_inline(logstr, writer = sys.stdout):
     writer.write("%s\t%s\r" % (str(datetime.now()), logstr))
     writer.flush()
 
-def load_user_comment(filename):
+def load_user_comment(filename, id_filename):
     comment_labeled = []
     log('loading LabeledSentence...')
     count = 1
+    fout = open(id_filename, "w")
     with open(filename) as fin:
         for line in fin:
             line = line.strip().split('\t')
@@ -43,28 +44,32 @@ def load_user_comment(filename):
             #arr = [x for x in line if x.strip() != ""]
             #comment_labeled.append(LabeledSentence(words=arr[1:], tags=[arr[0].decode('utf-8')]))
             comment_labeled.append(LabeledSentence(words=arr, tags=[line[0].decode('utf-8')]))
+            fout.write(line[0].decode('utf-8') + "\n")
             log(count)
             count += 1
     print ''
+    fout.close()
     return comment_labeled
 
 def main():
     data_directory = "../../paper/data/dianping/corpus/"
-    vector_directory = "../../paper/data/dianping/p2v/"
+    model_directory = "../../paper/data/dianping/p2v/model"
     #data_user  = os.join.path(data_directory, "comment.keyword.train.user")
     data_user  = os.path.join(data_directory, "comment.keyword.train.user.1000")
     data_shop  = os.path.join(data_directory, "comment.keyword.train.shop.1000")
-    vector_user = os.path.join(vector_directory, "comment.keyword.train.user.vector")
-    vector_shop = os.path.join(vector_directory, "comment.keyword.train.shop.vector")
+    vector_user = os.path.join(model_directory, "comment.keyword.train.user")
+    id_user = os.path.join(model_directory, "comment.keyword.train.user.id")
+    vector_shop = os.path.join(model_directory, "comment.keyword.train.shop")
+    id_shop = os.path.join(model_directory, "comment.keyword.train.shop.id")
 
-    user_comment = load_user_comment(data_user)
+    user_comment = load_user_comment(data_user, id_user)
     log('training user model...')
     model = Doc2Vec(user_comment, size=100)
     log('saving user model...')
-    #model.save(vector_user)
-    model.save_word2vec_format(vector_user, binary=False)
+    model.save(vector_user)
+    #model.save_word2vec_format(vector_user, binary=False)
 
-    shop_comment = load_user_comment(data_shop)
+    shop_comment = load_user_comment(data_shop, id_shop)
     log('training shop model...')
     model = Doc2Vec(shop_comment, size=100)
     log('saving shop model...')
