@@ -13,6 +13,7 @@ def logging(logstr):
 logging("loading lr model")
 model_directory = "../../paper/data/dianping/lr_model/"
 model_file = os.path.join(model_directory, "tfidf_top10K")
+#model_file = os.path.join(model_directory, "w2v_500")
 lr_model = joblib.load(model_file)
 
 def trans_tfidf_to_sparse(vec, col_size):
@@ -58,15 +59,19 @@ def load_vector(file_name):
         for line in f:
             line = line.strip().split("\t")
             vec_list = line[1:]
-            dic[line[0]] = [item.split(",") for item in vec_list]
+            dic[line[0]] = map(lambda x: float(x), vec_list)
+            #dic[line[0]] = [float(x) for x in vec_list]
     return dic
 
 vector_directory = "../../paper/data/dianping/tfidf/vector"
+#vector_directory = "../../paper/data/dianping/w2v/vector"
 user_vector = os.path.join(vector_directory, "comment.keyword.train.user.vector.1000")
 shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector.1000")
 
 user_vec_dic = load_train_vec(user_vector)
 shop_vec_dic = load_train_vec(shop_vector)
+#user_vec_dic = load_vector(user_vector)
+#shop_vec_dic = load_vector(shop_vector)
 #for i in shop_vec_dic.keys():
     #print shop_vec_dic[i]
 
@@ -81,5 +86,6 @@ def lr_predict(uid, sid):
     #dense matrix is more efficient here
     #joint_vec = trans_tfidf_to_sparse(u_vec + s_vec, 2 * get_len_vector())
     joint_vec = trans_tfidf_to_dense(u_vec + s_vec, 2 * get_len_vector())
+    #joint_vec = u_vec + s_vec
     result = lr_model.predict(joint_vec)
     return result

@@ -66,6 +66,7 @@ def load_sparse_trainingData(train_file, col_num):
 
 def main(train_file, model_file):
     train_x, train_y = load_sparse_trainingData(train_file, 2 * get_len_vector())
+    #train_x, train_y = load_trainingData(train_file)
     logging('len of y: %d' % train_y.shape)
     logging(train_x.shape)
     LR = LinearRegression()
@@ -78,7 +79,9 @@ def main(train_file, model_file):
 
 if __name__ == "__main__":
     training_file_directory = "../../paper/data/dianping/tfidf/vector/"
+    #training_file_directory = "../../paper/data/dianping/w2v/vector/"
     train_data = os.path.join(training_file_directory, "comment.keyword.train.joint.vector.1000")
     model_directory = "../../paper/data/dianping/lr_model/"
     model_file = os.path.join(model_directory, "tfidf_top10K")
+   # model_file = os.path.join(model_directory, "w2v_500")
     main(train_data,model_file)
