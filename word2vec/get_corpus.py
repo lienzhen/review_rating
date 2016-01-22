@@ -39,7 +39,7 @@ def preprocess_data(file_data, file_w2v_corpus):
     fw.close()
 
 if __name__ == "__main__":
-    file_data = "../../paper/data/dianping/comment.keyword.txt"
+    file_data = "../../paper/data/dianping/comment.keyword.txt.2000"
     w2v_directory = "../../paper/data/dianping/w2v/model/"
     w2v_corpus = os.path.join(w2v_directory, "corpus.txt")
     preprocess_data(file_data, w2v_corpus)
