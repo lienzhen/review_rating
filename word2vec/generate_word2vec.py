@@ -8,9 +8,9 @@ import jieba
 import tool
 
 stop_words = [word.strip() for word in open("../../paper/data/dianping/stopwords.txt").readlines()]
-#w2v_directory = "../../paper/data/dianping/w2v/model/"
-#word2vec_file = os.join(w2v_directory, "word2vec.txt")
-word2vec_file = "word2vec.txt"
+w2v_directory = "../../paper/data/dianping/w2v/model/"
+word2vec_file = os.path.join(w2v_directory, "vec.txt")
+#word2vec_file = "word2vec.txt"
 tool.logging("loading word2vec_model")
 word2vec = tool.load_vector_file(word2vec_file)
 dim = open(word2vec_file).readline().strip().split()[1]
