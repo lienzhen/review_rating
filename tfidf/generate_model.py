@@ -18,18 +18,18 @@ def load_corpus(filename):
     train_set = []
     index = 0
     with open(filename) as f:
-        index += 1
-        if index % 200 == 0:
-            logging(("%d cases") % index)
         for line in f:
+            index += 1
+            if index % 200 == 0:
+                logging(("%d cases") % index)
             line = line.strip().split("\t")
             if len(line) < 2:continue
             content = " ".join(line[1: ])
-            #fout.write(content + "\n")
+ #           fout.write(content + "\n")
             content = Converter('zh-hans').convert(content.decode("utf-8"))
             content = content.encode("utf-8")
             train_set.append([word.lower() for word in list(jieba.cut(content)) if word.lower().encode("utf-8") not in stop_words and word.strip() and word.lower().encode("utf-8") in top10k_words])
-            #fout.write("\t".join([word.lower().encode("utf-8") for word in list(jieba.cut(content)) if word.encode("utf-8") not in stop_words and word.strip() and word.lower().encode("utf-8") in top10k_words]) + "\n")
+#            fout.write("\t".join([word.lower().encode("utf-8") for word in list(jieba.cut(content)) if word.encode("utf-8") not in stop_words and word.strip() and word.lower().encode("utf-8") in top10k_words]) + "\n")
     return train_set
 
 def main():
