@@ -38,6 +38,7 @@ def parse_value(x):
     return (int(arr[0]), float(arr[1]))
 
 def load_train_vec(file_name):
+    #tfidf
     dic = {}
     logging("loading %s vetor" % file_name)
     with open(file_name) as f:
@@ -47,6 +48,17 @@ def load_train_vec(file_name):
             dic[line[0]] = map(parse_value, line[1:])
             #vec_list = line[1:]
             #dic[line[0]] = [item.split(",") for item in vec_list]
+    return dic
+
+def load_vector(file_name):
+    #w2v, p2v
+    dic = {}
+    logging("loading %s vetor" % file_name)
+    with open(file_name) as f:
+        for line in f:
+            line = line.strip().split("\t")
+            vec_list = line[1:]
+            dic[line[0]] = [item.split(",") for item in vec_list]
     return dic
 
 vector_directory = "../../paper/data/dianping/tfidf/vector"
