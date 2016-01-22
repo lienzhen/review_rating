@@ -8,7 +8,7 @@ from gensim import corpora, models
 from datetime import datetime
 
 stop_words = [word.strip() for word in open("../../paper/data/dianping/stopwords.txt").readlines()]
-top10k_words = [word.strip().split("\t")[0] for word in open("../../paper/data/dianping/tfidf/top10Kvocab").readlines()]
+top10k_words = [word.strip().split("\t")[0] for word in open("../../paper/data/dianping/tfidf/top150vocab").readlines()]
 
 #fout = open("./help1.txt", "w")
 def logging(logstr):
