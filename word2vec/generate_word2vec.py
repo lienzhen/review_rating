@@ -48,9 +48,9 @@ def main():
     data_directory = "../../paper/data/dianping/corpus/"
     vector_directory = "../../paper/data/dianping/w2v/vector/"
     user_data = os.path.join(data_directory, "comment.keyword.train.user.1000")
-    user_vector = os.path.join(vector_directory, "comment.keyword.train.user.vector.1000")
+    user_vector = os.path.join(vector_directory, "comment.keyword.train.user.vector")
     shop_data = os.path.join(data_directory, "comment.keyword.train.shop.1000")
-    shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector.1000")
+    shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector")
     tool.logging("generating users'vector")
     get_vec(user_data, user_vector)
     tool.logging("generating shops'vector")
