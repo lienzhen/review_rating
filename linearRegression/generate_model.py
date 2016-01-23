@@ -55,7 +55,9 @@ def load_sparse_trainingData(train_file, col_num):
             arr = line.strip().split("\t")
             train_y.extend([float(arr[-1])])
             for each in arr[2:-1]:
-                col_index, value = each.strip().split(',')
+                each = each.strip()
+                if not each: continue
+                col_index, value = each.split(',')
                 col_index = int(col_index)
                 rows.append(row_num)
                 cols.append(col_index)
