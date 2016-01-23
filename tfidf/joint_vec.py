@@ -20,14 +20,14 @@ def load_vec(filename):
     starttime = datetime.now()
     line_count = 0
     with open(filename) as f:
-        try:
-            for line in f:
-                line_count += 1
-                arr = line.strip().split("\t")
-                #vec[arr[0]] = arr[1:]
-                vec[arr[0]] = map(parse_value, arr[1:])
-        except:
-            print 'filename:%s lc:%d line:%s' % (filename, line_count, line)
+        #try:
+        for line in f:
+            line_count += 1
+            arr = line.strip().split("\t")
+            #vec[arr[0]] = arr[1:]
+            vec[arr[0]] = map(parse_value, arr[1:])
+        #except:
+            #print 'filename:%s lc:%d line:%s' % (filename, line_count, line)
     logging("loading %s vector, eplased time:%s" % (filename, str(datetime.now() - starttime)))
     return vec
 

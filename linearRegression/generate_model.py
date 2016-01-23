@@ -1,4 +1,6 @@
 #coding = "utf-8"
+import sys
+sys.path.append('../tfidf/')
 from sklearn.linear_model import LinearRegression
 from sklearn.externals import joblib
 import numpy as np
@@ -6,6 +8,7 @@ import os
 from datetime import datetime
 import scipy.sparse as sp
 from gensim import corpora
+from joint_vec import load_vec
 
 def logging(logstr):
     print "%s\t%s" % (datetime.now(), logstr)
@@ -66,8 +69,50 @@ def load_sparse_trainingData(train_file, col_num):
     logging("loading training data, eplased time:%s" % str(datetime.now() - starttime))
     return sp.coo_matrix((np.array(data), (np.array(rows), np.array(cols))), shape=(row_num, col_num)), np.array(train_y)
 
+def load_sparse_trainingData_memory(train_file, col_num):
+    data_directory = "../../paper/data/dianping/corpus/"
+    vector_directory = "../../paper/data/dianping/tfidf/vector"
+    user_vector = os.path.join(vector_directory, "comment.keyword.train.user.vector.1000")
+    shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector.1000")
+    data_path = os.path.join(data_directory, "comment.keyword.train.residual")
+    user_vec = load_vec(user_vector)
+    shop_vec = load_vec(shop_vector)
+    logging("jointing vector")
+    index = 0
+
+    train_y = []
+    rows = []
+    cols = []
+    data = []
+    row_num = 0
+
+    with open(data_path) as f:
+        for line in f:
+            index += 1
+            if index % 200 == 0:
+                logging("%d cases, data size:%d" % (int(index), len(data)))
+            arr = line.strip().split("\t")
+            if len(arr) != 3:
+                continue
+            if not user_vec.has_key(arr[0]) or not shop_vec.has_key(arr[1]):continue
+            u_vec = user_vec[arr[0]]
+            for each in u_vec:
+                #if each[0] <0: raise Exception('col < 0\tindex:%d\teach%s' % (index, each))
+                rows.append(row_num)
+                cols.append(each[0])
+                data.append(each[1])
+            s_vec = shop_vec[arr[1]]
+            for each in s_vec:
+                #if each[0] <0: raise Exception('col < 0\tindex:%d\teach%s' % (index, each))
+                rows.append(row_num)
+                cols.append(each[0])
+                data.append(each[1])
+            row_num += 1
+            train_y.append(float(arr[2]))
+    return sp.coo_matrix((np.array(data), (np.array(rows), np.array(cols))), shape=(row_num, col_num)), np.array(train_y)
+
 def main(train_file, model_file):
-    train_x, train_y = load_sparse_trainingData(train_file, 2 * get_len_vector())
+    train_x, train_y = load_sparse_trainingData_memory(train_file, 2 * get_len_vector())
     #train_x, train_y = load_trainingData(train_file)
     logging('len of y: %d' % train_y.shape)
     logging(train_x.shape)
