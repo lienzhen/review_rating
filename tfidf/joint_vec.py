@@ -11,17 +11,23 @@ def logging(logstr):
 
 def parse_value(x):
     arr = x.split(',')
+    if int(arr[0]) < 0: raise Exception('col num < 0')
     return (int(arr[0]), float(arr[1]))
 
 def load_vec(filename):
     vec = {}
     logging("loading %s vector" % filename)
     starttime = datetime.now()
+    line_count = 0
     with open(filename) as f:
-        for line in f:
-            arr = line.strip().split("\t")
-            #vec[arr[0]] = arr[1:]
-            vec[arr[0]] = map(parse_value, arr[1:])
+        try:
+            for line in f:
+                line_count += 1
+                arr = line.strip().split("\t")
+                #vec[arr[0]] = arr[1:]
+                vec[arr[0]] = map(parse_value, arr[1:])
+        except:
+            print 'filename:%s lc:%d line:%s' % (filename, line_count, line)
     logging("loading %s vector, eplased time:%s" % (filename, str(datetime.now() - starttime)))
     return vec
 
