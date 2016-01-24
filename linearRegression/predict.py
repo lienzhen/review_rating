@@ -103,10 +103,13 @@ class tfidf_lr_predictor:
         self.shop_vec_dic = load_train_vec(shop_file)
         self.lr_model = joblib.load(model_file)
         self.dim = 2 * get_len_vector()
-
+        self.miss = 0
+        self.hit = 0
     def predict(self, uid, sid):
         if uid not in self.user_vec_dic or sid not in self.shop_vec_dic:
+            self.miss += 1
             return 0
+        self.hit += 1
         joint_vec = trans_tfidf_to_dense(self.user_vec_dic[uid] + self.shop_vec_dic[sid], self.dim)
         return self.lr_model.predict(joint_vec)
 
@@ -115,10 +118,14 @@ class vec_lr_predictor:
         self.user_vec_dic = load_vector(user_file)
         self.shop_vec_dic = load_vector(shop_file)
         self.lr_model = joblib.load(model_file)
+        self.miss = 0
+        self.hit = 0
 
     def predict(self, uid, sid):
         if uid not in self.user_vec_dic or sid not in self.shop_vec_dic:
+            self.miss += 1
             return 0
+        self.hit += 1
         joint_vec = self.user_vec_dic[uid] + self.shop_vec_dic[sid]
         return self.lr_model.predict(joint_vec)
 

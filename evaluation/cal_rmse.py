@@ -3,9 +3,9 @@ import random
 import logging
 logging.basicConfig(format='%(asctime)s\t%(message)s', level=logging.INFO)
 import sys
-sys.path.append('../nmf')
+sys.path.append('../gen_data/')
 sys.path.append('../linearRegression/')
-from make_matrix import load_nmf_matrix, cal_score, load_user_item_score
+from cal_residual import load_nmf_matrix, cal_score, load_user_item_score
 from predict import tfidf_lr_predictor, vec_lr_predictor
 import os
 
@@ -23,12 +23,13 @@ def mf_score_function(user_id, item_id):
     else:
         global all_miss
         all_miss += 1
-        return random.randint(1, 5)
+        return 0
+        #return random.randint(1, 5)
 
 def vector_score_function(user_id, item_id):
     "tfidf and vector model with different predictors"
     if user_id in user_matrix and item_id in item_matrix:
-        return cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias) + tfidf_predictor(user_id, item_id)
+        return cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias) + tfidf_predictor.predict(user_id, item_id)
     elif user_id in user_matrix:
         global user_miss
         user_miss += 1
@@ -40,7 +41,8 @@ def vector_score_function(user_id, item_id):
     else:
         global all_miss
         all_miss += 1
-        return random.randint(1, 5)
+        #return random.randint(1, 5)
+        return 0
 
 def cal_rmse(test_file, score_function):
     error = 0.0
@@ -90,8 +92,8 @@ def main():
     tfidf_directory = "../../paper/data/dianping/tfidf/vector"
     vector_directory = "../../paper/data/dianping/w2v/vector"
     model_directory = "../../paper/data/dianping/lr_model/"
-    tfidf_user_vector = os.path.join(tfidf_directory, "comment.keyword.train.user.vector")
-    tfidf_shop_vector = os.path.join(tfidf_directory, "comment.keyword.train.shop.vector")
+    tfidf_user_vector = os.path.join(tfidf_directory, "comment.keyword.train.user.vector.1000")
+    tfidf_shop_vector = os.path.join(tfidf_directory, "comment.keyword.train.shop.vector.1000")
     user_vector = os.path.join(vector_directory, "comment.keyword.train.user.vector")
     shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector")
     tfidf_model_file = os.path.join(model_directory, "tfidf_top10K")
@@ -104,6 +106,7 @@ def main():
     rmse = cal_rmse(test_file, vector_score_function)
     print 'rmse:%lf' % rmse
     logging.info('user_miss:%d, item_miss:%d, all_miss: %d' % (user_miss, item_miss, all_miss))
+    logging.info('tfidf_predictor.hit:%d, miss:%d' % (tfidf_predictor.hit, tfidf_predictor.miss))
 
 if __name__ == '__main__':
     main()

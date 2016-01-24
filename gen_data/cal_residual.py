@@ -15,7 +15,7 @@ def load_nmf_matrix(filename, print_log = False):
     _bias = defaultdict(float)
     with open(filename) as fin:
         for line in fin:
-            if count % 10000 == 0 and print_log:
+            if count % 500000 == 0 and print_log:
                 logging.info(count)
             count += 1
             arr = line.split('\t')
@@ -68,7 +68,7 @@ def load_user_item_score(filename, print_log = False):
     count = 0
     with open(filename) as fin:
         for line in fin:
-            if line_count % 10000 == 0 and print_log:
+            if line_count % 500000 == 0 and print_log:
                 logging.info(line_count)
             line_count += 1
             user_id, item_id, star = line.strip().split()
