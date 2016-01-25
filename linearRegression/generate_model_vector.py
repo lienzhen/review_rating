@@ -60,7 +60,7 @@ def load_trainingData(train_file):
 def main(train_file, model_file):
     train_x, train_y = load_trainingData(train_file)
     #LR = LinearRegression()
-    LR = Ridge(alpha=1.0)
+    LR = Ridge(alpha=0.5)
     logging("training model...")
     starttime = datetime.now()
     LR.fit(train_x, train_y)
