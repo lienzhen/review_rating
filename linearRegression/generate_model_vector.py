@@ -7,6 +7,7 @@ import numpy as np
 import os
 from datetime import datetime
 import scipy.sparse as sp
+from sklearn.linear_model import Ridge
 from gensim import corpora
 from joint_vec import load_vec
 
@@ -58,7 +59,8 @@ def load_trainingData(train_file):
 
 def main(train_file, model_file):
     train_x, train_y = load_trainingData(train_file)
-    LR = LinearRegression()
+    #LR = LinearRegression()
+    LR = Ridge(alpha=1.0)
     logging("training model...")
     starttime = datetime.now()
     LR.fit(train_x, train_y)
@@ -72,5 +74,6 @@ if __name__ == "__main__":
 
     model_directory = "../../paper/data/dianping/lr_model/"
     #model_file = os.path.join(model_directory, "tfidf_top10K")
-    model_file = os.path.join(model_directory, "w2v_500")
+    #model_file = os.path.join(model_directory, "w2v_500")
+    model_file = os.path.join(model_directory, "w2v_500_ridge1")
     main(data, model_file)
