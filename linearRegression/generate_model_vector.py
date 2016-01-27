@@ -13,7 +13,9 @@ from joint_vec import load_vec
 from sklearn.svm.SVR import SVR
 
 def logging(logstr):
-    print "%s\t%s" % (datetime.now(), logstr)
+    #print "%s\t%s" % (datetime.now(), logstr)
+    sys.stdout.write("%s\t%s" % (datetime.now(), logstr))
+    sys.stdout.flush()
 
 def load_vec(filename):
     vec = {}
