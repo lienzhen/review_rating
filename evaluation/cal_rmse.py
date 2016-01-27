@@ -103,15 +103,16 @@ def main():
     shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector")
     tfidf_model_file = os.path.join(model_directory, "tfidf_top10K")
     vector_model_file = os.path.join(model_directory, "w2v_500")
-    tfidf_predictor = tfidf_lr_predictor(tfidf_user_vector, tfidf_shop_vector, tfidf_model_file)
-    #vec_predictor = vec_lr_predictor(user_vector, shop_vector, vector_model_file)
+    #tfidf_predictor = tfidf_lr_predictor(tfidf_user_vector, tfidf_shop_vector, tfidf_model_file)
+    vec_predictor = vec_lr_predictor(user_vector, shop_vector, vector_model_file)
 
     logging.info('calculating rmse...')
     #rmse = cal_rmse(test_file, mf_score_function)
     rmse = cal_rmse(test_file, vector_score_function)
     print 'rmse:%lf' % rmse
     logging.info('user_miss:%d, item_miss:%d, all_miss: %d' % (user_miss, item_miss, all_miss))
-    logging.info('tfidf_predictor.hit:%d, miss:%d' % (tfidf_predictor.hit, tfidf_predictor.miss))
+    #logging.info('tfidf_predictor.hit:%d, miss:%d' % (tfidf_predictor.hit, tfidf_predictor.miss))
+    logging.info('vec_predictor.hit:%d, miss:%d' % (vec_predictor.hit, vec_predictor.miss))
 
 if __name__ == '__main__':
     main()
