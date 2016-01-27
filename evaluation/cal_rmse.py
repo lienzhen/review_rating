@@ -9,7 +9,7 @@ from cal_residual import load_nmf_matrix, cal_score, load_user_item_score
 from predict import tfidf_lr_predictor, vec_lr_predictor
 import os
 
-def mf_score_function(user_id, item_id):
+def mf_score_function(user_id, item_id, star = 0):
     if user_id in user_matrix and item_id in item_matrix:
         return cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias)
     elif user_id in user_matrix:
@@ -26,7 +26,7 @@ def mf_score_function(user_id, item_id):
         return 0
         #return random.randint(1, 5)
 
-def vector_score_function(user_id, item_id):
+def vector_score_function(user_id, item_id, star = 0):
     "tfidf and vector model with different predictors"
     if user_id in user_matrix and item_id in item_matrix:
         mf_score = cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias)
@@ -58,7 +58,7 @@ def cal_rmse(test_file, score_function):
         for line in fin:
             user_id, shop_id, star = line.strip().split()[:3]
             star = float(star)
-            score = score_function(user_id, shop_id)
+            score = score_function(user_id, shop_id, star)
             count += 1
             error += (star - score) ** 2
     logging.info('cases:%d' % (count))
