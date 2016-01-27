@@ -29,7 +29,12 @@ def mf_score_function(user_id, item_id):
 def vector_score_function(user_id, item_id):
     "tfidf and vector model with different predictors"
     if user_id in user_matrix and item_id in item_matrix:
-        return cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias) + tfidf_predictor.predict(user_id, item_id)
+        mf_score = cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias)
+        lr_score = vec_predictor.predict(user_id, item_id)
+        if type(lr_score) != float: raise Exception('predictor return type error')
+        print '%s\t%s\t%lf\t%lf\t%lf\t%lf\t%lf' % (user_id, item_id, mf_score, lr_score, star, star - mf_score - lr_score, star - mf_score)
+        #return cal_score(user_id, item_id, user_matrix, item_matrix, user_bias, item_bias, global_bias) + tfidf_predictor.predict(user_id, item_id)
+        return mf_score + lr_score
     elif user_id in user_matrix:
         global user_miss
         user_miss += 1
