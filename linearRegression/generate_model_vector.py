@@ -10,6 +10,7 @@ import scipy.sparse as sp
 from sklearn.linear_model import Ridge
 from gensim import corpora
 from joint_vec import load_vec
+from sklearn.svm.SVR import SVR
 
 def logging(logstr):
     print "%s\t%s" % (datetime.now(), logstr)
@@ -59,8 +60,9 @@ def load_trainingData(train_file):
 
 def main(train_file, model_file):
     train_x, train_y = load_trainingData(train_file)
-    LR = LinearRegression(normalize = True)
+    #LR = LinearRegression(normalize = True)
     #LR = Ridge(alpha=0.5)
+    LR = SVR(C=1.0, epsilon=0.2)
     logging("training model...")
     starttime = datetime.now()
     LR.fit(train_x, train_y)
@@ -75,5 +77,5 @@ if __name__ == "__main__":
     model_directory = "../../paper/data/dianping/lr_model/"
     #model_file = os.path.join(model_directory, "tfidf_top10K")
     #model_file = os.path.join(model_directory, "w2v_500")
-    model_file = os.path.join(model_directory, "w2v_500_ridge1")
+    model_file = os.path.join(model_directory, "w2v_500_svr_c_1_e_0.1")
     main(data, model_file)
