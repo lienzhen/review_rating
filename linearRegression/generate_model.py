@@ -12,7 +12,7 @@ from joint_vec import load_vec
 
 def logging(logstr):
     #print "%s\t%s" % (datetime.now(), logstr)
-    sys.stdout.write("%s\t%s" % (datetime.now(), logstr))
+    sys.stdout.write("%s\t%s\n" % (datetime.now(), logstr))
     sys.stdout.flush()
 
 def get_len_vector():

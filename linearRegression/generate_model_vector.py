@@ -10,11 +10,11 @@ import scipy.sparse as sp
 from sklearn.linear_model import Ridge
 from gensim import corpora
 from joint_vec import load_vec
-from sklearn.svm.SVR import SVR
+from sklearn.svm import SVR
 
 def logging(logstr):
     #print "%s\t%s" % (datetime.now(), logstr)
-    sys.stdout.write("%s\t%s" % (datetime.now(), logstr))
+    sys.stdout.write("%s\t%s\n" % (datetime.now(), logstr))
     sys.stdout.flush()
 
 def load_vec(filename):
