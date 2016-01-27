@@ -11,7 +11,9 @@ from gensim import corpora
 from joint_vec import load_vec
 
 def logging(logstr):
-    print "%s\t%s" % (datetime.now(), logstr)
+    #print "%s\t%s" % (datetime.now(), logstr)
+    sys.stdout.write("%s\t%s" % (datetime.now(), logstr))
+    sys.stdout.flush()
 
 def get_len_vector():
     model_directory = "../../paper/data/dianping/tfidf/model"
@@ -97,13 +99,11 @@ def load_sparse_trainingData_memory(train_file, col_num):
             if not user_vec.has_key(arr[0]) or not shop_vec.has_key(arr[1]):continue
             u_vec = user_vec[arr[0]]
             for each in u_vec:
-                #if each[0] <0: raise Exception('col < 0\tindex:%d\teach%s' % (index, each))
                 rows.append(row_num)
                 cols.append(each[0])
                 data.append(each[1])
             s_vec = shop_vec[arr[1]]
             for each in s_vec:
-                #if each[0] <0: raise Exception('col < 0\tindex:%d\teach%s' % (index, each))
                 rows.append(row_num)
                 cols.append(each[0])
                 data.append(each[1])
