@@ -64,7 +64,7 @@ def main(train_file, model_file):
     train_x, train_y = load_trainingData(train_file)
     #LR = LinearRegression(normalize = True)
     #LR = Ridge(alpha=0.5)
-    LR = SVR(C=1.0, epsilon=0.2)
+    LR = SVR(C=1.0, epsilon=0.2, verbose = True)
     logging("training model...")
     starttime = datetime.now()
     LR.fit(train_x, train_y)
