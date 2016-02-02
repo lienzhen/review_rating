@@ -3,10 +3,14 @@ import jieba
 import sys
 sys.path.append("../langconv/")
 from langconv import *
+from datetime import datetime
 
 stop_words = [word.strip() for word in open("../../paper/data/dianping/stopwords.txt").readlines()]
 word_count = defaultdict(lambda : 0)
 top10k_words = set()
+
+def logging(logstr):
+    print "%s\t%s" % (datetime.now(), logstr)
 
 def isnumeric(num):
     try:
@@ -18,10 +22,10 @@ def isnumeric(num):
 def count_words(filename):
     index = 0
     with open(filename) as f:
-        index += 1
-        if index % 200 == 0:
-            logging("%d cases" % index)
         for line in f:
+            index += 1
+            if index % 200 == 0:
+                logging("%d cases" % index)
             line = line.strip().split("\t")
             if len(line) < 4: continue
             content = ' '.join(line[3:])
@@ -35,12 +39,12 @@ def count_words(filename):
 if __name__ == "__main__":
     count_words("../../paper/data/dianping/comment.keyword.txt")
     sorted_words = sorted(word_count.items(), key=lambda x : x[1], reverse=True)
-    fout = file('../../paper/data/dianping/tfidf/top10Kvocab', 'w')
+    fout = file('../../paper/data/dianping/tfidf/top300vocab', 'w')
     count = 0
     for item in sorted_words:
         top10k_words.add(item[0].encode('utf-8'))
+        if int(item[1]) < 300: break
         count += 1
         fout.write('%s\t%d\n' % (item[0].encode('utf-8'), item[1]))
-        if count >= 10000: break
     fout.close()
     print "done"
