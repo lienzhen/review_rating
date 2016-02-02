@@ -15,6 +15,45 @@ def logging(logstr):
     sys.stdout.write("%s\t%s\n" % (datetime.now(), logstr))
     sys.stdout.flush()
 
+def load_long_vector(filename):
+    vec = {}
+    logging('loading %s vector' % filename)
+    starttime = datetime.now()
+    line_count = 0
+    with open(filename) as f:
+        for line in f:
+            line_count += 1
+            arr = line.strip().split("\t")
+            vec[arr[0]] = map(lambda x: float(x), arr[1:])
+    logging("loading %s vector, eplased time:%s" % (filename, str(datetime.now() - starttime)))
+    return vec
+
+def load_long_training_data_memory():
+    data_directory = "../../paper/data/dianping/corpus/"
+    vector_directory = "../../paper/data/dianping/tfidf/vector"
+    user_vector = os.path.join(vector_directory, "comment.keyword.train.user.vector.long")
+    shop_vector = os.path.join(vector_directory, "comment.keyword.train.shop.vector.long")
+    data_path = os.path.join(data_directory, "comment.keyword.train.residual")
+    user_vec = load_long_vector(user_vector)
+    shop_vec = load_long_vector(shop_vector)
+    logging("loading long vector training data...")
+
+    line_count = 0
+    train_x = []
+    train_y = []
+    with open(data_path) as fin:
+        for line in fin:
+            line_count += 1
+            if line_count % 200 == 0:
+                logging('%d' % line_count)
+            arr = line.strip().split('\t')
+            if len(arr) != 3: continue
+            if arr[0] not in user_vec or arr[1] not in shop_vec: continue
+            train_x.append(user_vec[arr[0]] + shop_vec[arr[1]])
+            train_y.append(float(arr[2]))
+    logging('length of x:%d, length of y:%d' % (len(train_x), len(train_y)))
+    return np.array(train_x, copy=False), np.array(train_y, copy=False)
+
 def get_len_vector():
     model_directory = "../../paper/data/dianping/tfidf/model"
     tfidf_loadDic = os.path.join(model_directory, "tfidf.dic")
@@ -112,11 +151,12 @@ def load_sparse_trainingData_memory(train_file, col_num):
     return sp.coo_matrix((np.array(data), (np.array(rows), np.array(cols))), shape=(row_num, col_num)), np.array(train_y)
 
 def main(train_file, model_file):
-    train_x, train_y = load_sparse_trainingData_memory(train_file, 2 * get_len_vector())
+    #train_x, train_y = load_sparse_trainingData_memory(train_file, 2 * get_len_vector())
+    train_x, train_y = load_long_training_data_memory()
     #train_x, train_y = load_trainingData(train_file)
     logging('len of y: %d' % train_y.shape)
     logging(train_x.shape)
-    LR = LinearRegression()
+    LR = LinearRegression(copy_X = False, normalize = True)
     logging("training model...")
     starttime = datetime.now()
     LR.fit(train_x, train_y)
@@ -127,8 +167,8 @@ def main(train_file, model_file):
 if __name__ == "__main__":
     training_file_directory = "../../paper/data/dianping/tfidf/vector/"
     #training_file_directory = "../../paper/data/dianping/w2v/vector/"
-    train_data = os.path.join(training_file_directory, "comment.keyword.train.joint.vector.1000")
+    train_data = os.path.join(training_file_directory, "comment.keyword.train.joint.vector")
     model_directory = "../../paper/data/dianping/lr_model/"
-    model_file = os.path.join(model_directory, "tfidf_top10K")
+    model_file = os.path.join(model_directory, "tfidf_top2000")
    # model_file = os.path.join(model_directory, "w2v_500")
     main(train_data,model_file)
