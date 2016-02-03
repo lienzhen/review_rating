@@ -1,7 +1,7 @@
 #coding = "utf-8"
 import sys
 sys.path.append('../tfidf/')
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, SGDRegressor
 from sklearn.externals import joblib
 import numpy as np
 import os
@@ -56,7 +56,7 @@ def load_long_training_data_memory():
 
 def get_len_vector():
     model_directory = "../../paper/data/dianping/tfidf/model"
-    tfidf_loadDic = os.path.join(model_directory, "tfidf.dic")
+    tfidf_loadDic = os.path.join(model_directory, "tfidf_top2000.dic")
     dictionary = corpora.Dictionary.load(tfidf_loadDic)
     return len(dictionary)
 
@@ -156,7 +156,8 @@ def main(train_file, model_file):
     #train_x, train_y = load_trainingData(train_file)
     logging('len of y: %d' % train_y.shape)
     logging(train_x.shape)
-    LR = LinearRegression(copy_X = False, normalize = True)
+    #LR = LinearRegression(copy_X = False, normalize = True)
+    LR = SGDRegressor(verbose=1)
     logging("training model...")
     starttime = datetime.now()
     LR.fit(train_x, train_y)
