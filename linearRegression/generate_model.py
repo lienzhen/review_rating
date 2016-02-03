@@ -23,6 +23,8 @@ def load_long_vector(filename):
     with open(filename) as f:
         for line in f:
             line_count += 1
+            if line_count % 100 == 0:
+                logging(line_count)
             arr = line.strip().split("\t")
             vec[arr[0]] = map(lambda x: float(x), arr[1:])
     logging("loading %s vector, eplased time:%s" % (filename, str(datetime.now() - starttime)))
