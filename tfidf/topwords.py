@@ -10,7 +10,8 @@ word_count = defaultdict(lambda : 0)
 top10k_words = set()
 
 def logging(logstr):
-    print "%s\t%s" % (datetime.now(), logstr)
+    sys.stdout.write("%s\t%s\n" % (datetime.now(), logstr))
+    sys.stdout.flush()
 
 def isnumeric(num):
     try:
