@@ -269,7 +269,7 @@ def gradedecentRating(data,j):
     for i in range(2):
         data = gradedecentWeight(data)
         cost = data.calTrainCost()
-        myPrint(0,"i-th:%d,item>>>change:%8d,trainCost:%9.4f" %(j,0,cost))
+        myPrint(0,"i-th:%d,weight>>>change:%8d,trainCost:%9.4f" %(j,0,cost))
     return data
 
 def gradedecentRatingUser(data):
