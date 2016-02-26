@@ -29,7 +29,7 @@ class myData:
         self.reg_user_weight = reg_user_weight
         self.reg_item_weight = reg_item_weight
 
-    def load_vec(vec_file):
+    def load_vec(self, vec_file):
         vec_dict = {}
         with open(user_vec_file) as fin:
             for line in fin:
@@ -37,7 +37,7 @@ class myData:
                 vec_dict[arr[0]] = np.array(map(lambda x: float(x), arr[1:]))
         return vec_dict
 
-    def get_vec_size(vec_dict):
+    def get_vec_size(self, vec_dict):
         for each in vec_dict:
             return vec_dict[each].shape[0]
 
