@@ -230,7 +230,7 @@ def gradedecentWeight(data):
     for userId in data.scoreUserDic:
         update = 0.0
         for (itemId,score) in data.scoreUserDic[userId].items():
-            u = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.userV[userId], data.user_weight) + np.dot(data.itemV[itemId], data.item_weight) - score
+            u = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.user_vec[userId], data.user_weight) + np.dot(data.item_vec[itemId], data.item_weight) - score
             update += u
         data.user_weight += data.reg_user_weight * update * data.user_vec[userId]
 
@@ -277,7 +277,7 @@ def gradedecentRatingUser(data):
     for userId in data.scoreUserDic:
         grad = np.zeros((1,data.CONST_K))
         for (itemId,score) in data.scoreUserDic[userId].items():
-            u = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.userV[userId], data.user_weight) + np.dot(data.itemV[itemId], data.item_weight) - score
+            u = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.user_vec[userId], data.user_weight) + np.dot(data.item_vec[itemId], data.item_weight) - score
             u = u * data.itemV[itemId]
             grad = grad + u
 
@@ -292,7 +292,7 @@ def gradedecentRatingItem(data):
     for itemId in data.scoreItemDic:
         grad = np.zeros((1,data.CONST_K))
         for (userId,score) in data.scoreItemDic[itemId].items():
-            v = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.userV[userId], data.user_weight) + np.dot(data.itemV[itemId], data.item_weight) - score
+            v = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.user_vec[userId], data.user_weight) + np.dot(data.item_vec[itemId], data.item_weight) - score
             v = v * data.userV[userId]
             grad = grad + v
         grad += data.regItem * data.itemV[itemId]
@@ -308,7 +308,7 @@ def gradedecentBaise(data):
     for userId,arr in data.scoreUserDic.items():
         gradU = 0.0
         for itemId,score in arr.items():
-            gradU += np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.userV[userId], data.user_weight) + np.dot(data.itemV[itemId], data.item_weight) - score
+            gradU += np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.user_vec[userId], data.user_weight) + np.dot(data.item_vec[itemId], data.item_weight) - score
         gradU += data.regBaise * data.userBaise[userId]
         data.userBaise[userId] -= data.speed * gradU
         grad += gradU ** 2
@@ -316,7 +316,7 @@ def gradedecentBaise(data):
     for itemId,arr in data.scoreItemDic.items():
         gradV = 0.0
         for userId,score in arr.items():
-            gradV += np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.userV[userId], data.user_weight) + np.dot(data.itemV[itemId], data.item_weight) - score
+            gradV += np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.user_vec[userId], data.user_weight) + np.dot(data.item_vec[itemId], data.item_weight) - score
         gradV += data.regBaise * data.itemBaise[itemId]
         data.itemBaise[itemId] -= data.speed * gradV
         grad += gradV ** 2
