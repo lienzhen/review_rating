@@ -364,6 +364,10 @@ def output(dataName, outPre, data):
 
     out_file.close()
 
+    out_file = open(outPre + dataName + ".weight", "w+")
+    out_file.write('%s\n' % (' '.join(['%lf' % x for x in data.user_weight.tolist()])))
+    out_file.write('%s\n' % (' '.join(['%lf' % x for x in data.item_weight.tolist()])))
+    out_file.close()
 
 if __name__ ==  "__main__":
 
