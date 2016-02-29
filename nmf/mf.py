@@ -298,7 +298,7 @@ def myPrint(level,*args):
 
 
 def output(dataName, outPre, data):
-
+    myPrint(0, 'write to file:%s' % (outPre + dataName + ".user"))
     out_file = open(outPre + dataName + ".user", "w+")
 
     for userId in data.scoreUserDic:
@@ -310,6 +310,8 @@ def output(dataName, outPre, data):
         out_file.write(line + "\n")
 
     out_file.close()
+
+    myPrint(0, 'write to file:%s' % (outPre + dataName + ".item"))
     out_file = open(outPre + dataName + ".item", "w+")
 
     for itemId in data.scoreItemDic:

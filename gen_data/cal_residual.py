@@ -157,9 +157,9 @@ def cal_residual(train_file_path, user_item_path, output_path, filename):
     # comment.keyword.train
     fout = file(os.path.join(output_path, '%s.residual' % filename), 'w')
     logging.info('loading user matrix...')
-    user_matrix, user_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.user_item_star.user' % filename))
+    user_matrix, user_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.user' % filename))
     logging.info('loading item matrix...')
-    item_matrix, item_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.user_item_star.item' % filename))
+    item_matrix, item_bias = load_nmf_matrix(os.path.join(user_item_path, '%s.item' % filename))
     logging.info('loading score matrix...')
     _matrix, global_bias = load_score_matrix(os.path.join(train_file_path, '%s.user_item_star' % filename))
     logging.info('global_bias:%s' % global_bias)

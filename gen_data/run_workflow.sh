@@ -1,8 +1,9 @@
-filename='comment.keyword'
+#filename='comment.keyword.sample_user.10k'
+filename=$1
 basedir='../../paper/data/dianping/'
 mf_train_path=$basedir'mf/train/'
 mf_out_path=$basedir'mf/out/'
-user_item_star=$filename'.user_item_star'
+user_item_star=$filename'.train.user_item_star'
 corpus_path=$basedir'corpus/'
 
 #mf settings
@@ -12,7 +13,7 @@ regI=" -regI   0.001 "
 regB=" -regB   0.001 "
 print=" -print 1 "
 # !!!iteration!!!
-iter=" -iter   10 "
+iter=" -iter   100 "
 k=" -k 50 "
 numTrain=" -numTrain 1 "
 
@@ -42,7 +43,7 @@ fi
 
 #MF
 echo 'STEP 4'
-python ../nmf/mf.py -dataName ${filename} -train ${mf_train_path}${user_item_star} -outPre ${mf_out_path} ${speed} ${regU} ${regI} ${regB} ${regK} ${numTrain} ${iter} ${k}
+python ../nmf/mf.py -dataName ${filename}.train -train ${mf_train_path}${user_item_star} -outPre ${mf_out_path} ${speed} ${regU} ${regI} ${regB} ${regK} ${numTrain} ${iter} ${k}
 if [ $? -ne 0 ]
 then
     exit 1
