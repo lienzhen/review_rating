@@ -24,14 +24,14 @@ class myData:
         self.user_vec = self.load_vec(user_vec_file)
         self.item_vec = self.load_vec(item_vec_file)
         self.weight_size = self.get_vec_size(self.user_vec)
-        self.user_weight = np.random.random(self.weight_size) - 0.5
-        self.item_weight = np.random.random(self.weight_size) - 0.5
+        self.user_weight = np.random.normal(0, 0.001, self.weight_size)
+        self.item_weight = np.random.normal(0, 0.001, self.weight_size)
         self.reg_user_weight = reg_user_weight
         self.reg_item_weight = reg_item_weight
 
     def load_vec(self, vec_file):
         vec_dict = {}
-        with open(user_vec_file) as fin:
+        with open(vec_file) as fin:
             for line in fin:
                 arr = line.strip().split('\t')
                 vec_dict[arr[0]] = np.array(map(lambda x: float(x), arr[1:]))
@@ -88,6 +88,8 @@ class myData:
             user = line[0]
             item = line[1]
             score =  float(line[2])
+            if user not in self.user_vec:
+                self.user_vec[user] = np.zeros(self.weight_size)
 
             if (user + "/" + item) in  duplicaset:
                 continue
@@ -158,7 +160,7 @@ class myData:
         totalCost = 0.0
         for (userId,arr) in self.scoreUserDic.items():
             for (itemId,score) in arr.items():
-                cost = np.dot(self.userV[userId],self.itemV[itemId]) + self.globalBaise + self.userBaise[userId] + self.itemBaise[itemId] - score
+                cost = np.dot(self.userV[userId],self.itemV[itemId]) + self.globalBaise + self.userBaise[userId] + self.itemBaise[itemId] + np.dot(data.user_vec[data.idToUserDic[userId]], data.user_weight) + np.dot(data.item_vec[data.idToItemDic[itemId]], data.item_weight) - score
                 cost = cost ** 2
                 totalCost += cost
 
@@ -231,16 +233,16 @@ def gradedecentWeight(data):
         update = 0.0
         for (itemId,score) in data.scoreUserDic[userId].items():
             u = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.user_vec[data.idToUserDic[userId]], data.user_weight) + np.dot(data.item_vec[data.idToItemDic[itemId]], data.item_weight) - score
-            update += u
-        data.user_weight += data.reg_user_weight * update * data.user_vec[data.idToUserDic[userId]]
+            update += data.reg_user_weight * u
+        data.user_weight -= update * data.user_vec[data.idToUserDic[userId]]
 
     # update item weight
     for itemId in data.scoreItemDic:
         update = 0.0
         for (userId,score) in data.scoreItemDic[itemId].items():
             u = np.dot(data.userV[userId],data.itemV[itemId]) + data.globalBaise + data.userBaise[userId] + data.itemBaise[itemId] + np.dot(data.user_vec[data.idToUserDic[userId]], data.user_weight) + np.dot(data.item_vec[data.idToItemDic[itemId]], data.item_weight) - score
-            update += u
-        data.item_weight += data.reg_item_weight * update * data.item_vec[data.idToItmeDic[itemId]]
+            update += data.reg_item_weight * u
+        data.item_weight -= update * data.item_vec[data.idToItemDic[itemId]]
     return data
 
 

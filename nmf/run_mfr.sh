@@ -14,9 +14,9 @@ numTrain=" -numTrain 1 "
 inPre="../../paper/data/dianping/mf/train/"
 outPre="../../paper/data/dianping/mf/out/"
 userVec="-userVec ../../paper/data/dianping/w2v/vector/comment.keyword.train.user.vector.100"
-itemVec="-itemVec ../../paper/data/dianping/w2v/vector/comment.keyword.train.item.vector.100"
-regUWeight="-regUWeight 0.0001"
-regIWeight="-regIWeight 0.0001"
+itemVec="-itemVec ../../paper/data/dianping/w2v/vector/comment.keyword.train.shop.vector.100"
+regUWeight="-regUWeight 0.001"
+regIWeight="-regIWeight 0.001"
 
 runPart() {
     local newArr
@@ -27,7 +27,7 @@ runPart() {
         trainFileName=$inPre$dataName
         printfilename=$dataName".log"
 
-        nohup python mf.py -dataName ${dataName} -train ${trainFileName} -outPre ${outPre} ${speed} ${regU} ${regI} ${regB} ${regK} ${numTrain} ${iter} ${k} ${userVec} ${itemVec} ${regUWeight} ${regIWeight} > $printfilename &
+        nohup python mfr.py -dataName ${dataName} -train ${trainFileName} -outPre ${outPre} ${speed} ${regU} ${regI} ${regB} ${regK} ${numTrain} ${iter} ${k} ${userVec} ${itemVec} ${regUWeight} ${regIWeight} > $printfilename &
 
 
     done
