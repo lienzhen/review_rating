@@ -312,7 +312,7 @@ def output(dataName, outPre, data):
     out_file.close()
 
     myPrint(0, 'write to file:%s' % (outPre + dataName + ".item"))
-    out_file = open(outPre + dataName + ".item", "w+")
+    out_file = open(outPre + dataName + ".shop", "w+")
 
     for itemId in data.scoreItemDic:
         item  =  data.idToItemDic[itemId]
