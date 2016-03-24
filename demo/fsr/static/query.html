@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Query result</title>
+</head>
+
+<body>
+{% if error %}
+{{ err_msg }}
+{% else %}
+<div>user id: {{ user.user_id }}</div>
+<div>username: {{ user.username }}</div>
+<div>commnets: {{ comments }}</div>
+<div>keywords: {{ keywords }}</div>
+<div>
+    {% for shop in shops %}
+    <div style="border: 1px solid #000; margin:5px; padding:5px;">
+        {{ shop.title }}
+        <br /> 预测分数：{{ shop.predict }}
+        <br /> 星级：{{ shop.star }}
+        <br /> 电话：{{ shop.telephone }}
+        <br /> 地址：{{ shop.address }}
+        <br /> 评论：{{ shop.comments }}
+        <br /> 关键词：{{ shop.keywords }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+</body>
+</html>

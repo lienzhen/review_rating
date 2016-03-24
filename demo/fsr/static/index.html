@@ -1,0 +1,187 @@
+<html>
+	<head>
+	<link href="/static/js/bootstrap.min.css" rel="stylesheet">
+	<script src="/static/js/bootstrap-theme.min.css"></script>
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tagsphere.min.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        $('#tag_cloud').tagcloud({centrex:200, centrey:200, init_motion_x:10, init_motion_y:10});
+    });
+    </script>
+    <style>
+    body {
+        background-color: #566270;
+        color:#FFF;
+        font-size: 14px;
+        font-family:"Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
+    }
+    .navbar-header a:link, .navbar-header a:visited, .navbar-header a:hover{
+        color:#FFF;
+    }
+    .nav li a:link, .nav li a:visited, .nav li a:hover{
+        color:#FFF;
+    }
+    #container {
+        width: 80%;
+        margin: 0px auto;
+        padding: 0 20px;
+    }
+    #left {
+        width: 50%;
+        float:left;
+    }
+    #right {
+        width: 50%;
+        float:left;
+        border: 1px solid #e3dede;
+        padding: 10px;
+    }
+    #user_img {
+        //margin:0px auto;
+        //text-align:center;
+        margin:20px auto;
+        height:150px;
+    }
+    #user_info {
+        font-size: 18px;
+    }
+    .info_tag {
+        font-size:14px;
+        color:#E0E3DA;
+        margin-right:10px;
+    }
+    #user_info div {
+        margin-bottom:5px;
+    }
+    #tag_cloud {
+        border: 2px solid #555;
+        width:400px;
+        height:400px;
+    }
+    #tag_cloud li a{
+        text-decoration: none;
+        color: #FFF;
+    }
+    #tag_cloud ul li{
+        list-style-type: none;
+    }
+    #shop_list ul li{
+        list-style-type: none;
+        margin-bottom:10px;
+        border-bottom: 1px solid #FFF;
+        padding: 10px;
+    }
+    #shop_list ul {
+        padding: 0;
+    }
+    .shop_img {
+        float: left;
+        margin-right: 20px;
+    }
+    .predict_score {
+        font-size: 18px;
+        color:#c03546;
+        margin-left:10px;
+    }
+    .info div {
+        margin-bottom:3px;
+    }
+    .sml-stars {
+        width: 68px;
+        height: 12px;
+        background-image: url('/static/image/remark-shop.png');
+        background-repeat: no-repeat;
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: -1px;
+    }
+    .sml-str5 {
+        background-position: 0 -880px;
+    }
+    .sml-str4 {
+        background-position: 0 -920px;
+    }
+    .sml-str3 {
+        background-position: 0 -960px;
+    }
+    .sml-str2 {
+        background-position: 0 -980px;
+    }
+    .sml-str1 {
+        background-position: 0 -1000px;
+    }
+    .sml-str0 {
+        background-position: 0 -1020px;
+    }
+    </style>
+    <title>Food Shop Recommendation System</title>
+	</head>
+<body>
+<div>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid" style="width:80%; margin: 0 auto;">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Food Shop Recommendation System</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Search</a></li>
+        <li><a href="/random/">Random</a></li>
+        <li><a href="#">About the system</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</div>
+
+<div id="container">
+    <div id="left">
+        <div id='user_img'>
+            <img src="/static/image/test.jpg">
+        </div>
+        <div id="user_info">
+            <div><span class="info_tag">用户名</span>{{user.username}}</div>
+                <div><span class="info_tag">用户id</span>{{user.user_id}}</div>
+        </div>
+        <div id="tag_cloud">
+            <ul>
+                {% for each in keywords %}
+                <li><a href="#" rel="{{ each.rk }}" style="color:{{ each.cl }}">{{ each.kw }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div id="right">
+        <div id="shop_list">
+            <ul>
+                {% for shop in shops %}
+                <li>
+                <div class="shop_img"><img src="/static/image/test.jpg" /></div>
+                <div class="info">
+                    <div class="title">{{ shop.title }}</div>
+                    <div class="star"><span class="sml-stars sml-str{{ shop.star }}"></span></div>
+                    <div class="predict"><span>预测分数</span><span class="predict_score">{{ shop.predict }}</span></div>
+                    <div class="contact">{{ shop.telephone }}</div>
+                    <div class="address">{{ shop.address }}</div>
+                </div>
+                <div class="shop_keywords"> {{ shop.keywords }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+	</body>
+</html>
